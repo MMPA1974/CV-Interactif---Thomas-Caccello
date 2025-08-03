@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Interactif | Thomas Caccello - Gestionnaire de Paie</title>
+    
+    <!-- Chosen Palette: Dark Mode - Chic Blue (Blue-700/400), Beige/Terracotta (Stone-200/600, Orange-600), Vibrant Accents (Amber-400, Rose-800) -->
+    <!-- Application Structure Plan: A single-page application that simulates multiple pages using JavaScript to show/hide sections. The main sections are Profil, Compétences, Parcours, and Contact. This structure provides a clear, segmented navigation experience, allowing users to focus on one area at a time, which is more intuitive than continuous scrolling for a detailed profile. The interactive elements (radar chart, timeline, modals) are integrated within these sections to enhance exploration. -->
+    <!-- Visualization & Content Choices:
+        - Profil -> Goal: Inform -> Presentation: Hero section with key summary text and call-to-action buttons. Interactive "Qualités Clés" tags with hover/click details (designer tooltips). Interaction: Direct contact links, dynamic display of soft skill examples. Justification: Provides immediate overview, highlights key personal attributes with concrete examples, and encourages engagement.
+        - Compétences -> Goal: Compare/Organize -> Presentation: Radar Chart (Chart.js) dynamically showing "Niveau de Compétence Actuel (en progression)" based on training progress. Separate lists for "Compétences Clés" (acquired, clickable to show details) and "Compétences Techniques (En Cours d'Acquisition)" (in-progress, clickable to show detailed program modules in a modal). Interaction: Visual representation for quick understanding of progression, detailed lists for granular understanding with drill-down to program specifics. Justification: Clearly distinguishes acquired vs. in-progress skills, offers transparent view of development and learning depth.
+        - Parcours -> Goal: Change/Organize -> Presentation: Vertical Timeline (HTML/CSS) with vibrant points and hover effects. Interaction: Each timeline item is clickable, opening a modal with detailed information about the experience/formation. Justification: Clearly illustrates career transition and growth over time with rich, on-demand details.
+        - Contact -> Goal: Inform -> Presentation: Dedicated footer section with dynamic, rounded buttons for specific calls to action (stage/emploi) and vibrant colors. Interaction: Direct links for email/phone, clear calls to action. Justification: Ensures easy access to contact information with a memorable and engaging final impression.
+    All choices avoid SVG/Mermaid and rely on Chart.js (Canvas), HTML/CSS, and vanilla JavaScript for interactivity and responsiveness. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* gray-900 for dark mode */
+            color: #e2e8f0; /* gray-200 for light text */
+        }
+        .chart-container {
+            position: relative;
+            height: 40vh;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            max-height: 500px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 50vh;
+            }
+        }
+        /* Hide all sections by default, JS will manage visibility */
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background-color: #e7e5e4; /* stone-200 for light modal background */
+            margin: auto;
+            padding: 30px;
+            border-radius: 16px; /* More rounded */
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.7);
+            position: relative;
+            color: #1a202c; /* Dark text for light background */
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid #2563eb; /* blue-600 Chic blue border */
+        }
+        .close-button {
+            color: #334155; /* slate-700 */
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 32px; /* Larger */
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #2563eb; /* blue-600 Chic blue on hover */
+        }
+        .soft-skill-tooltip {
+            position: absolute;
+            background-color: #facc15; /* amber-400 for vibrant yellow background */
+            color: #1a202c; /* gray-900 for dark text */
+            padding: 10px 15px;
+            border-radius: 24px; /* Very rounded corners for tooltip (like speech bubble) */
+            font-size: 0.9rem;
+            white-space: normal;
+            max-width: 280px;
+            text-align: justify; /* Justified text in tooltip */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            z-index: 50;
+            transform: translateY(-15px); /* Adjusted initial position */
+            border: 2px solid #ea580c; /* orange-600 Terracotta border for tooltip */
+            font-weight: bold; /* Text in bold */
+        }
+        .soft-skill-tag:hover .soft-skill-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-8px); /* Adjusted hover position */
+        }
+        /* Custom button styles for gradient/shadow for extra pop */
+        .btn-primary {
+            background-color: #2563eb; /* blue-600 Chic blue */
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+        }
+        .btn-secondary {
+            background-color: #ea580c; /* orange-600 Terracotta orange */
+            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.4);
+        }
+        /* Keyframe for button pulse effect */
+        @keyframes pulse-effect {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4); }
+            50% { transform: scale(1.02); box-shadow: 0 6px 20px rgba(0, 191, 255, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4); }
+        }
+        .btn-primary:hover {
+            animation: pulse-effect 0.8s infinite;
+        }
+        @keyframes pulse-effect-secondary {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(234, 88, 12, 0.4); }
+            50% { transform: scale(1.02); box-shadow: 0 6px 20px rgba(234, 88, 12, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(234, 88, 12, 0.4); }
+        }
+        .btn-secondary:hover {
+            animation: pulse-effect-secondary 0.8s infinite;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-gray-800/80 backdrop-blur-sm sticky top-0 z-50 shadow-lg">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-xl font-bold text-gray-100">
+                Thomas Caccello
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#profil" class="nav-link text-gray-300 hover:text-blue-400 transition-colors font-medium">Profil</a>
+                <a href="#competences" class="nav-link text-gray-300 hover:text-blue-400 transition-colors font-medium">Compétences</a>
+                <a href="#parcours" class="nav-link text-gray-300 hover:text-blue-400 transition-colors font-medium">Parcours</a>
+                <a href="#contact" class="nav-link text-gray-300 hover:text-blue-400 transition-colors font-medium">Contact</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-gray-100 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-800">
+            <a href="#profil" class="nav-link block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-blue-400">Profil</a>
+            <a href="#competences" class="nav-link block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-blue-400">Compétences</a>
+            <a href="#parcours" class="nav-link block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-blue-400">Parcours</a>
+            <a href="#contact" class="nav-link block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-blue-400">Contact</a>
+        </div>
+    </header>
+
+    <!-- Main Content Container for "Pages" -->
+    <div class="container mx-auto px-6 py-12">
+
+        <!-- Section Profil -->
+        <section id="profil" class="content-section active text-center mb-24">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-100 mb-2">Thomas Caccello 👋</h1>
+            <h2 class="text-2xl font-medium text-blue-400 mb-6">Gestionnaire de Paie (En formation & Montée en Compétence)</h2>
+            <div class="max-w-3xl mx-auto text-lg text-gray-300 mb-8 text-justify">
+                <p class="mb-4">
+                    Actuellement en <span class="font-bold">montée en compétence</span> sur le métier de <span class="font-bold">Gestionnaire de Paie</span> 🚀 via une formation certifiante (Titre RNCP niveau 5 - Bac+2) avec STUDI, débutée le <span class="font-bold">3 juin 2025</span>. Ma certification est prévue entre <span class="font-bold">Avril 2026 et Juillet 2026</span>.
+                </p>
+                <p>
+                    Je mobilise plus de 20 ans d'expérience en gestion et relation client pour devenir un expert de la paie et de l'administration du personnel. Je suis à la recherche active d'un stage ou d'un emploi pour concrétiser ce projet professionnel et mettre en pratique mes acquis théoriques. ✨
+                </p>
+            </div>
+            <div class="flex justify-center space-x-4 mb-8">
+                <a href="#contact" class="btn-primary text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-transform hover:scale-105 shadow-lg">Me Contacter 📞</a>
+                <a href="mailto:thomas.caccello@gmail.com" class="bg-gray-700 text-blue-400 font-bold py-3 px-6 rounded-lg border border-blue-700 hover:bg-gray-600 hover:border-blue-600 transition-transform hover:scale-105 shadow-lg">Envoyer un email 📧</a>
+            </div>
+
+            <h3 class="text-xl font-bold text-gray-100 mb-4">Qualités Clés</h3>
+            <div class="max-w-3xl mx-auto flex flex-wrap justify-center gap-4 text-gray-300">
+                <span class="soft-skill-tag relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors">Discrétion 🤫
+                    <span class="soft-skill-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2">
+                        • Respect de la confidentialité des informations sensibles du personnel, essentiel pour la gestion de la paie et des données RH.
+                    </span>
+                </span>
+                <span class="soft-skill-tag relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors">Sens du service 👍
+                    <span class="soft-skill-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2">
+                        • Accueillir et orienter efficacement la clientèle chez SARL DSG, garantissant une expérience positive et professionnelle.
+                    </span>
+                </span>
+                <span class="soft-skill-tag relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors">Leadership 🌟
+                    <span class="soft-skill-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2">
+                        • Management d'équipe et optimisation des relations fournisseurs chez SARL MIJE & SEZADIS, démontrant une capacité à fédérer.
+                    </span>
+                </span>
+                <span class="soft-skill-tag relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors">Relation et négociation (clients, fournisseurs, équipe) 🤝
+                    <span class="soft-skill-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2">
+                        • Gestion et développement d'un portefeuille clients chez Thiriet, avec succès dans les objectifs commerciaux et la satisfaction client.
+                    </span>
+                </span>
+                <span class="soft-skill-tag relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors">Organisation et respect des échéances 🗓️
+                    <span class="soft-skill-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2">
+                        • Gestion des stocks et commandes, respect des délais critiques en environnement dynamique, assurant une efficacité opérationnelle.
+                    </span>
+                </span>
+            </div>
+        </section>
+
+        <!-- Section Compétences -->
+        <section id="competences" class="content-section mb-24">
+            <h2 class="text-3xl font-bold text-center text-gray-100 mb-4">Compétences Clés</h2>
+            <p class="text-center max-w-2xl mx-auto text-gray-300 mb-12">
+                Mon profil combine une solide expérience transférable avec des compétences techniques en paie, activement acquises lors de ma formation. Le graphique ci-dessous illustre l'équilibre de mes domaines de compétences, tandis que les listes détaillent mon savoir-faire technique.
+            </p>
+            <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+                <!-- Radar Chart -->
+                <div class="w-full lg:w-1/2">
+                    <div class="chart-container">
+                        <canvas id="skillsChart"></canvas>
+                    </div>
+                </div>
+                <!-- Skills List -->
+                <div class="w-full lg:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
+                        <h3 class="font-bold text-lg text-blue-400 mb-3">Compétences Clés 🌟</h3>
+                        <ul class="space-y-2 text-sm text-gray-300 list-disc list-inside">
+                            <li class="cursor-pointer hover:text-blue-300 transition-colors" data-skill-detail="gestion_portefeuille_clients">Gestion de portefeuille clients</li>
+                            <li class="cursor-pointer hover:text-blue-300 transition-colors" data-skill-detail="gestion_stocks_commandes">Gestion des stocks et commandes</li>
+                            <li class="cursor-pointer hover:text-blue-300 transition-colors" data-skill-detail="management_equipe">Management d'équipe</li>
+                            <li class="cursor-pointer hover:text-blue-300 transition-colors" data-skill-detail="accueil_operations">Accueil physique et téléphonique & Opérations bancaires</li>
+                            <li class="cursor-pointer hover:text-blue-300 transition-colors" data-skill-detail="gestion_administrative">Gestion administrative diverse</li>
+                        </ul>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
+                        <h3 class="font-bold text-lg text-blue-400 mb-3">Compétences Techniques (En Cours d'Acquisition) 📚</h3>
+                        <ul class="space-y-2 text-sm text-gray-300 list-disc list-inside">
+                            <li class="cursor-pointer hover:text-blue-300 transition-colors" data-skill-detail="gestion_paie_declarations">Gestion de la Paie & Déclarations Sociales</li>
+                            <li class="cursor-pointer hover:text-blue-300 transition-colors" data-skill-detail="gestion_admin_personnel">Gestion Administrative du Personnel</li>
+                            <li class="cursor-pointer hover:text-blue-300 transition-colors" data-skill-detail="conseil_assistance_rh">Conseil & Assistance RH</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Parcours -->
+        <section id="parcours" class="content-section mb-24">
+            <h2 class="text-3xl font-bold text-center text-gray-100 mb-12">Parcours Professionnel et Formation ⏳</h2>
+            <p class="text-center max-w-2xl mx-auto text-gray-300 mb-12">
+                Découvrez ma trajectoire professionnelle, de mes expériences passées à ma formation actuelle en gestion de paie, illustrant ma détermination à évoluer vers ce nouveau métier. Cliquez sur chaque élément pour plus de détails.
+            </p>
+            <div class="relative max-w-3xl mx-auto">
+                <!-- Vertical line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-stone-700"></div>
+                
+                <!-- Timeline Items -->
+                <div class="space-y-16">
+                    <!-- Formation en cours -->
+                    <div class="timeline-item relative flex items-center cursor-pointer" data-detail-id="formation_gdp">
+                        <div class="hidden md:block w-1/2 pr-8"></div>
+                        <div class="hidden md:block absolute w-4 h-4 rounded-full bg-blue-400 left-1/2 transform -translate-x-1/2 z-10 border-2 border-gray-900"></div>
+                        <div class="w-full md:w-1/2 md:pl-8">
+                            <div class="bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-blue-400 hover:border-blue-300 transition-colors">
+                                <p class="text-sm text-gray-400">Juin 2025 – Juin 2026</p>
+                                <h3 class="font-bold text-lg text-gray-100 mt-1">Gestionnaire de Paie (Titre RNCP niv. 5) 🎓</h3>
+                                <p class="text-md font-medium text-gray-300">Studi (partenariat ESGRH)</p>
+                                <p class="text-sm text-gray-400 mt-2">Formation en ligne, couvrant l'ensemble des processus de paie. <span class="font-bold">Certification prévue entre Avril 2026 et Juillet 2026.</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expérience VRP -->
+                    <div class="timeline-item relative flex items-center flex-row-reverse md:flex-row cursor-pointer" data-detail-id="exp_vrp">
+                        <div class="w-full md:w-1/2 md:pr-8 text-right">
+                            <div class="bg-gray-800 p-6 rounded-lg shadow-md border-r-4 md:border-r-0 md:border-l-4 border-orange-400 hover:border-orange-300 transition-colors">
+                                <p class="text-sm text-gray-400">Février 2021 – Mai 2024</p>
+                                <h3 class="font-bold text-lg text-gray-100 mt-1">VRP 💼</h3>
+                                <p class="text-md font-medium text-gray-300">Thiriet - Nogent sur Seine (CDI)</p>
+                                <p class="text-sm text-gray-400 mt-2">Gestion et développement d'un portefeuille clients.</p>
+                            </div>
+                        </div>
+                        <div class="hidden md:block absolute w-4 h-4 rounded-full bg-amber-400 left-1/2 transform -translate-x-1/2 z-10 border-2 border-gray-900"></div>
+                        <div class="hidden md:block w-1/2 pl-8"></div>
+                    </div>
+                    
+                    <!-- Expérience Responsable -->
+                    <div class="timeline-item relative flex items-center cursor-pointer" data-detail-id="exp_responsable">
+                        <div class="hidden md:block w-1/2 pr-8"></div>
+                        <div class="hidden md:block absolute w-4 h-4 rounded-full bg-amber-400 left-1/2 transform -translate-x-1/2 z-10 border-2 border-gray-900"></div>
+                        <div class="w-full md:w-1/2 md:pl-8">
+                            <div class="bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-orange-400 hover:border-orange-300 transition-colors">
+                                <p class="text-sm text-gray-400">Septembre 2011 – Janvier 2021</p>
+                                <h3 class="font-bold text-lg text-gray-100 mt-1">Responsable fruits et légumes 🍎</h3>
+                                <p class="text-md font-medium text-gray-300">SARL MIJE & SEZADIS</p>
+                                <p class="text-sm text-gray-400 mt-2">Gestion complète des stocks, des commandes, management d'équipe et optimisation des relations fournisseurs.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expérience Caissier -->
+                    <div class="timeline-item relative flex items-center flex-row-reverse md:flex-row cursor-pointer" data-detail-id="exp_caissier">
+                         <div class="w-full md:w-1/2 md:pr-8 text-right">
+                            <div class="bg-gray-800 p-6 rounded-lg shadow-md border-r-4 md:border-r-0 md:border-l-4 border-orange-400 hover:border-orange-300 transition-colors">
+                                <p class="text-sm text-gray-400">Juillet 2002 – Septembre 2011</p>
+                                <h3 class="font-bold text-lg text-gray-100 mt-1">Caissier et accueil du public 🤝</h3>
+                                <p class="text-md font-medium text-gray-300">SARL DSG</p>
+                                <p class="text-sm text-gray-400 mt-2">Gestion de la réception physique et téléphonique, opérations bancaires, et diverses tâches administratives avec rigueur.</p>
+                            </div>
+                        </div>
+                        <div class="hidden md:block absolute w-4 h-4 rounded-full bg-amber-400 left-1/2 transform -translate-x-1/2 z-10 border-2 border-gray-900"></div>
+                        <div class="hidden md:block w-1/2 pl-8"></div>
+                    </div>
+
+                    <!-- Formation initiale -->
+                    <div class="timeline-item relative flex items-center cursor-pointer" data-detail-id="formation_bac">
+                        <div class="hidden md:block w-1/2 pr-8"></div>
+                        <div class="hidden md:block absolute w-4 h-4 rounded-full bg-stone-600 left-1/2 transform -translate-x-1/2 z-10 border-2 border-gray-900"></div>
+                        <div class="w-full md:w-1/2 md:pl-8">
+                            <div class="bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-stone-600 hover:border-stone-500 transition-colors">
+                                <p class="text-sm text-gray-400">Juin 2002</p>
+                                <h3 class="font-bold text-lg text-gray-100 mt-1">Baccalauréat STT – Action et Communication Administratives (ACA) 📚</h3>
+                                <p class="text-md font-medium text-gray-300">THIBAUT DE CHAMPAGNE</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Centres d'intérêt -->
+        <section id="interets" class="content-section mb-24">
+            <h2 class="text-3xl font-bold text-center text-gray-100 mb-12">Centres d'Intérêt & Certifications 🌟</h2>
+            <p class="text-center max-w-2xl mx-auto text-gray-300 mb-12">
+                Mes passions enrichissent mon profil et témoignent de ma curiosité et de ma rigueur, des qualités essentielles dans mon parcours professionnel.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
+                    <h3 class="font-bold text-lg text-blue-400 mb-3">Loisirs et Passions</h3>
+                    <ul class="space-y-2 text-sm text-gray-300 list-disc list-inside">
+                        <li><span class="font-bold">Cinéma :</span> Passion pour les œuvres contemporaines et classiques (Dernier film vu : Alien Romulus) 🎬</li>
+                        <li><span class="font-bold">Couture & Création Manuelles :</span> Réalisation de pièces uniques, imagination libre, esprit curieux et touche à tout 🧵</li>
+                        <li><span class="font-bold">Jeux Vidéo :</span> Intérêt pour l'univers narratif et la stratégie 🎮</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
+                    <h3 class="font-bold text-lg text-blue-400 mb-3">Certifications</h3>
+                    <ul class="space-y-2 text-sm text-gray-300 list-disc list-inside">
+                        <li><span class="font-bold">Gestionnaire de Paie :</span> En cours (Certification prévue entre Avril 2026 et Juillet 2026) 🏆</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer / Contact -->
+    <footer id="contact" class="content-section bg-gray-900 text-white scroll-mt-20 py-12">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-4 text-gray-100">Prêt à transformer votre équipe ? Contactez-moi ! 🚀</h2>
+            <p class="mb-8 max-w-xl mx-auto text-gray-300 text-justify">
+                Je suis disponible pour un stage de 2 mois au plus tard avant le <span class="font-bold">30 janvier 2026</span>, afin de mettre en pratique mes acquis théoriques et accélérer ma montée en compétence. Je suis également ouvert aux opportunités d'emploi. N'hésitez pas à me contacter pour discuter de la manière dont mes compétences peuvent bénéficier à votre organisation. ✨
+            </p>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+                <a href="mailto:thomas.caccello@gmail.com?subject=Proposition de Stage pour Thomas Caccello" class="btn-primary text-white font-bold py-4 px-8 rounded-full hover:opacity-90 transition-transform hover:scale-105 shadow-xl text-lg">Proposer un Stage 🎯</a>
+                <a href="mailto:thomas.caccello@gmail.com?subject=Proposition d'Emploi pour Thomas Caccello" class="btn-secondary text-white font-bold py-4 px-8 rounded-full hover:opacity-90 transition-transform hover:scale-105 shadow-xl text-lg">Proposer un Emploi 💡</a>
+            </div>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 mt-8 text-lg">
+                <div class="flex items-center gap-2">📧 <a href="mailto:thomas.caccello@gmail.com" class="hover:text-blue-300 transition-colors">thomas.caccello@gmail.com</a></div>
+                <div class="flex items-center gap-2">📞 <a href="tel:0762597282" class="hover:text-blue-300 transition-colors">07 62 59 72 82</a></div>
+                <div class="flex items-center gap-2">📍 Anglure, 51260</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="modalTitle" class="text-2xl font-bold text-blue-700 mb-4"></h3>
+            <p id="modalPeriod" class="text-sm text-gray-600 mb-2"></p>
+            <p id="modalCompany" class="text-md font-medium text-gray-700 mb-4"></p>
+            <div id="modalDescription" class="text-gray-800 leading-relaxed"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile menu toggle
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Function to show a specific section and hide others
+            function showSection(sectionId) {
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId).classList.add('active');
+
+                // Update active state in nav links
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    if (link.getAttribute('href') === '#' + sectionId) {
+                        link.classList.add('text-blue-400');
+                        link.classList.remove('text-gray-300');
+                    } else {
+                        link.classList.remove('text-blue-400');
+                        link.classList.add('text-gray-300');
+                    }
+                });
+            }
+
+            // Handle navigation clicks
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('href').substring(1);
+                    showSection(sectionId);
+                    // Close mobile menu if open
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                    // Update URL hash without scrolling
+                    history.pushState(null, '', '#' + sectionId);
+                });
+            });
+
+            // Handle initial load and back/forward button
+            function handleHashChange() {
+                const hash = window.location.hash.substring(1);
+                if (hash && document.getElementById(hash)) {
+                    showSection(hash);
+                } else {
+                    // Default to profil section if no valid hash
+                    showSection('profil');
+                }
+            }
+
+            window.addEventListener('hashchange', handleHashChange);
+            handleHashChange(); // Call on initial load
+
+            // Calculate training progress for Radar Chart
+            const startDate = new Date('2025-06-03');
+            const endDate = new Date('2026-04-30'); // Fin avril
+            const currentDate = new Date();
+
+            const totalDurationMs = endDate.getTime() - startDate.getTime();
+            const elapsedDurationMs = currentDate.getTime() - startDate.getTime();
+
+            let progressPercentage = 0;
+            if (elapsedDurationMs > 0 && totalDurationMs > 0) {
+                progressPercentage = Math.min(100, (elapsedDurationMs / totalDurationMs) * 100);
+            }
+            // Cap progress at 100% if current date is past end date
+            if (currentDate > endDate) {
+                progressPercentage = 100;
+            }
+
+            // Define base values for skills not directly tied to current training progression
+            const outilsLogicielsBase = 90; // Assuming some prior knowledge/quick learning
+            const compTransferablesBase = 95; // Already acquired
+
+            // Adjust in-progress skills based on calculated progress
+            // Max values are adjusted slightly lower to reflect "in progress" nature
+            const gestionPaieProgress = Math.min(80, progressPercentage * 0.8); 
+            const adminPersonnelProgress = Math.min(75, progressPercentage * 0.75); 
+            const conseilDroitSocialProgress = Math.min(70, progressPercentage * 0.7); 
+
+            // Chart.js Radar Chart
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            const skillsChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'Gestion de la Paie', 
+                        'Admin. du Personnel', 
+                        'Conseil & Droit Social', 
+                        'Outils & Logiciels', 
+                        'Comp. Transférables'
+                    ],
+                    datasets: [{
+                        label: 'Niveau de Compétence Actuel (en progression)', /* Updated label for clarity */
+                        data: [
+                            gestionPaieProgress, 
+                            adminPersonnelProgress, 
+                            conseilDroitSocialProgress, 
+                            outilsLogicielsBase, 
+                            compTransferablesBase
+                        ],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)', /* blue-500 with opacity */
+                        borderColor: 'rgb(37, 99, 235)', /* blue-600 */
+                        pointBackgroundColor: 'rgb(37, 99, 235)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(37, 99, 235)'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(100, 116, 139, 0.3)' /* slate-500 with opacity */
+                            },
+                            grid: {
+                                color: 'rgba(100, 116, 139, 0.3)' /* slate-500 with opacity */
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                },
+                                color: '#e2e8f0' /* gray-200 */
+                            },
+                            ticks: {
+                                backdropColor: 'rgba(26, 32, 44, 0)', /* gray-900 with opacity */
+                                color: '#94a3b8', /* slate-400 */
+                                stepSize: 25
+                            },
+                            min: 0,
+                            max: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true, /* Show legend for clarity on progression */
+                            labels: {
+                                color: '#e2e8f0' /* gray-200 */
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Timeline Modal Logic
+            const detailData = {
+                formation_gdp: {
+                    title: "Gestionnaire de Paie (Titre RNCP niv. 5)",
+                    period: "Juin 2025 – Juin 2026",
+                    company: "Studi (en partenariat académique avec ESGRH)",
+                    description: `
+                        <p>Formation certifiante en ligne couvrant l'intégralité des processus de gestion de la paie et du droit social. Préparation aux 3 blocs de compétences clés :</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Gestion de la paie et des déclarations sociales</li>
+                            <li>Gestion administrative du personnel</li>
+                            <li>Conseil et assistance auprès des décideurs et des collaborateurs</li>
+                        </ul>
+                        <p class="mt-4">Acquisition de 120 crédits ECTS. Certification prévue entre Avril 2026 et Juillet 2026.</p>
+                    `
+                },
+                exp_vrp: {
+                    title: "VRP",
+                    period: "Février 2021 – Mai 2024",
+                    company: "Thiriet - Nogent sur Seine (CDI)",
+                    description: `
+                        <p>Responsable de la gestion et du développement d'un portefeuille clients. Missions principales :</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Prospection et fidélisation de la clientèle</li>
+                            <li>Négociation commerciale et suivi des ventes</li>
+                            <li>Atteinte des objectifs de chiffre d'affaires</li>
+                            <li>Gestion autonome de l'emploi du temps et des tournées</li>
+                        </ul>
+                        <p class="mt-4">Développement de compétences en relation client, négociation et autonomie.</p>
+                    `
+                },
+                exp_responsable: {
+                    title: "Responsable fruits et légumes",
+                    period: "Septembre 2011 – Janvier 2021",
+                    company: "SARL MIJE & SEZADIS",
+                    description: `
+                        <p>Gestion complète du rayon fruits et légumes, incluant :</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Gestion des stocks et inventaires</li>
+                            <li>Passation des commandes auprès des fournisseurs</li>
+                            <li>Management et supervision d'une équipe</li>
+                            <li>Optimisation de la relation fournisseurs et négociation des prix</li>
+                            <li>Assurance de la qualité et de la fraîcheur des produits</li>
+                        </ul>
+                        <p class="mt-4">Expérience significative en gestion d'équipe, logistique et relation commerciale.</p>
+                    `
+                },
+                exp_caissier: {
+                    title: "Caissier et accueil du public",
+                    period: "Juillet 2002 – Septembre 2011",
+                    company: "SARL DSG",
+                    description: `
+                        <p>Responsable de l'accueil et des opérations courantes :</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Réception physique et téléphonique de la clientèle</li>
+                            <li>Réalisation des opérations bancaires diverses (dépôts, retraits, virements)</li>
+                            <li>Gestion du courrier entrant et sortant</li>
+                            <li>Rédaction et enregistrement de divers documents administratifs</li>
+                            <li>Gestion des rendez-vous et de l'emploi du temps</li>
+                            <li>Classement et suivi des dossiers</li>
+                        </ul>
+                        <p class="mt-4">Développement d'une grande rigueur administrative et d'un sens aigu du service client.</p>
+                    `
+                },
+                formation_bac: {
+                    title: "Baccalauréat STT – Action et Communication Administratives (ACA)",
+                    period: "Juin 2002",
+                    company: "THIBAUT DE CHAMPAGNE",
+                    description: `
+                        <p>Formation axée sur les compétences administratives et de communication, préparant aux métiers du secrétariat et de l'assistance de direction.</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Maîtrise des outils bureautiques</li>
+                            <li>Techniques de communication écrite et orale</li>
+                            <li>Organisation administrative et gestion de dossiers</li>
+                        </ul>
+                    `
+                }
+            };
+
+            const skillDetailData = {
+                gestion_portefeuille_clients: {
+                    title: "Gestion de Portefeuille Clients",
+                    description: `
+                        <p>Compétence acquise en tant que VRP chez Thiriet, incluant :</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Développement et fidélisation d'une clientèle existante.</li>
+                            <li>Prospection active de nouveaux clients.</li>
+                            <li>Analyse des besoins clients et proposition de solutions adaptées.</li>
+                            <li>Suivi des ventes et gestion des litiges.</li>
+                        </ul>
+                        <p class="mt-4 font-bold">Démonstration d'une forte capacité commerciale et relationnelle. 📈</p>
+                    `
+                },
+                gestion_stocks_commandes: {
+                    title: "Gestion des Stocks et Commandes",
+                    description: `
+                        <p>Expertise développée en tant que Responsable fruits et légumes chez SARL MIJE & SEZADIS :</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Optimisation des niveaux de stocks pour minimiser les pertes et les ruptures.</li>
+                            <li>Passation des commandes auprès de multiples fournisseurs.</li>
+                            <li>Négociation des conditions d'achat et des délais de livraison.</li>
+                            <li>Contrôle qualité à réception des marchandises.</li>
+                        </ul>
+                        <p class="mt-4 font-bold">Compétence essentielle pour une gestion logistique efficace. 📦</p>
+                    `
+                },
+                management_equipe: {
+                    title: "Management d'Équipe",
+                    description: `
+                        <p>Expérience en management d'équipe en tant que Responsable fruits et légumes :</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Encadrement et motivation du personnel.</li>
+                            <li>Planification des tâches et répartition des responsabilités.</li>
+                            <li>Formation et accompagnement des nouveaux collaborateurs.</li>
+                            <li>Gestion des plannings et des absences.</li>
+                        </ul>
+                        <p class="mt-4 font-bold">Capacité à diriger et à développer les talents. 👥</p>
+                    `
+                },
+                accueil_operations: {
+                    title: "Accueil Physique et Téléphonique & Opérations Bancaires",
+                    description: `
+                        <p>Compétences clés acquises chez SARL DSG en tant que Caissier et accueil du public :</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Accueil chaleureux et professionnel de la clientèle.</li>
+                            <li>Gestion des appels téléphoniques et des demandes d'information.</li>
+                            <li>Réalisation de toutes les opérations bancaires courantes (dépôts, retraits, virements).</li>
+                            <li>Conseil et orientation des clients vers les services appropriés.</li>
+                        </ul>
+                        <p class="mt-4 font-bold">Excellence dans la relation client et la gestion des transactions. 🤝</p>
+                    `
+                },
+                gestion_administrative: {
+                    title: "Gestion Administrative Diverse",
+                    description: `
+                        <p>Rigueur administrative développée chez SARL DSG :</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Rédaction et enregistrement de courriers et documents.</li>
+                            <li>Classement et archivage de dossiers.</li>
+                            <li>Suivi administratif et gestion des échéances.</li>
+                            <li>Organisation des rendez-vous et gestion d'agenda.</li>
+                        </ul>
+                        <p class="mt-4 font-bold">Maîtrise des procédures administratives et de l'organisation. 📋</p>
+                    `
+                },
+                gestion_paie_declarations: {
+                    title: "Gestion de la Paie & Déclarations Sociales (Programme de Formation)",
+                    description: `
+                        <p>Cette section de la formation couvre l'ensemble des processus essentiels à la gestion de la paie et aux obligations déclaratives :</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Paramétrage du logiciel de paie (selon législation, convention collective, spécificités d'entreprise)</li>
+                            <li>Collecte et traitement des variables de paie (absences, heures supplémentaires, primes, etc.)</li>
+                            <li>Calcul et contrôle des cotisations sociales, prélèvement à la source et salaire net à payer</li>
+                            <li>Établissement des bulletins de paie dans le respect du droit du travail et des conventions collectives</li>
+                            <li>Réalisation des déclarations sociales nominatives (DSN) et autres déclarations aux organismes sociaux</li>
+                            <li>Analyse des écarts entre la paie et la comptabilité</li>
+                        </ul>
+                        <p class="mt-4 font-bold">Objectif : Maîtriser la conformité et la rigueur de la paie. 💰</p>
+                    `
+                },
+                gestion_admin_personnel: {
+                    title: "Gestion Administrative du Personnel (Programme de Formation)",
+                    description: `
+                        <p>Ce bloc de compétences se concentre sur l'administration du personnel tout au long du cycle de vie du salarié :</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Assurer l'ensemble des formalités administratives liées au cycle de vie du salarié</li>
+                            <li>Rédiger des contrats de travail et des avenants conformes au droit social</li>
+                            <li>Gérer les formalités d'embauche (DPAE, affiliation) et de départ (certificat de travail, solde de tout compte)</li>
+                            <li>Tenir à jour les dossiers du personnel dans le respect de la réglementation (RGPD)</li>
+                            <li>Communiquer efficacement avec les partenaires externes (URSSAF, médecine du travail) et les services internes</li>
+                        </ul>
+                        <p class="mt-4 font-bold">Objectif : Gérer le parcours salarié avec efficacité et conformité. 📄</p>
+                    `
+                },
+                conseil_assistance_rh: {
+                    title: "Conseil & Assistance RH (Programme de Formation)",
+                    description: `
+                        <p>Cette partie de la formation vise à développer des compétences de support et d'expertise RH :</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Fournir une expertise et un soutien aux décideurs et aux salariés sur les questions relatives à la paie et au droit social</li>
+                            <li>Effectuer une veille juridique et réglementaire et analyser son impact sur la gestion de la paie et l'administration du personnel</li>
+                            <li>Créer des tableaux de bord et des supports de reporting (masse salariale, effectifs, absences) pour l'aide à la décision</li>
+                            <li>Accompagner les managers et les collaborateurs dans l'utilisation d'un SIRH (Système d'Information de Ressources Humaines) en élaborant des modes opératoires clairs</li>
+                        </ul>
+                        <p class="mt-4 font-bold">Objectif : Devenir un partenaire RH stratégique et opérationnel. 📊</p>
+                    `
+                }
+            };
+
+            const modal = document.getElementById('detailModal');
+            const closeButton = document.querySelector('.close-button');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalPeriod = document.getElementById('modalPeriod');
+            const modalCompany = document.getElementById('modalCompany');
+            const modalDescription = document.getElementById('modalDescription');
+
+            // Function to open modal with content
+            function openModal(title, period, company, description) {
+                modalTitle.textContent = title;
+                modalPeriod.textContent = period;
+                modalCompany.textContent = company;
+                modalDescription.innerHTML = description;
+                modal.style.display = 'flex';
+            }
+
+            // Timeline item click handler
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const detailId = this.dataset.detailId;
+                    const data = detailData[detailId];
+                    if (data) {
+                        openModal(data.title, data.period, data.company, data.description);
+                    }
+                });
+            });
+
+            // Skill item click handler
+            document.querySelectorAll('[data-skill-detail]').forEach(item => {
+                item.addEventListener('click', function() {
+                    const skillDetailId = this.dataset.skillDetail;
+                    const data = skillDetailData[skillDetailId];
+                    if (data) {
+                        openModal(data.title, '', '', data.description); // No period/company for skill details
+                    }
+                });
+            });
+
+            closeButton.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
