@@ -93,30 +93,8 @@
         .close-button:focus {
             color: #2563eb; /* blue-600 Chic blue on hover */
         }
-        .soft-skill-tooltip {
-            position: absolute;
-            background-color: #facc15; /* amber-400 for vibrant yellow background */
-            color: #1a202c; /* gray-900 for dark text */
-            padding: 10px 15px;
-            border-radius: 24px; /* Very rounded corners for tooltip (like speech bubble) */
-            font-size: 0.9rem;
-            white-space: normal;
-            max-width: 280px;
-            text-align: center; /* Centered text in tooltip */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-            z-index: 50;
-            transform: translateY(-15px); /* Adjusted initial position */
-            border: 2px solid #d97706; /* amber-700 for a darker yellow/orange border */
-            font-weight: bold; /* Text in bold */
-        }
-        .soft-skill-tag:hover .soft-skill-tooltip {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(-8px); /* Adjusted hover position */
-        }
+        /* No more soft-skill-tooltip specific styles as they are now modals */
+
         /* Custom button styles for gradient/shadow for extra pop */
         .btn-primary {
             background-color: #2563eb; /* blue-600 Chic blue */
@@ -157,6 +135,7 @@
                 <a href="#profil" class="nav-link text-gray-300 hover:text-blue-400 transition-colors font-medium">Profil</a>
                 <a href="#competences" class="nav-link text-gray-300 hover:text-blue-400 transition-colors font-medium">Compétences</a>
                 <a href="#parcours" class="nav-link text-gray-300 hover:text-blue-400 transition-colors font-medium">Parcours</a>
+                <a href="#interets" class="nav-link text-gray-300 hover:text-blue-400 transition-colors font-medium">Intérêts & Certifications</a>
                 <a href="#contact" class="nav-link text-gray-300 hover:text-blue-400 transition-colors font-medium">Contact</a>
             </div>
             <div class="md:hidden">
@@ -170,6 +149,7 @@
             <a href="#profil" class="nav-link block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-blue-400">Profil</a>
             <a href="#competences" class="nav-link block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-blue-400">Compétences</a>
             <a href="#parcours" class="nav-link block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-blue-400">Parcours</a>
+            <a href="#interets" class="nav-link block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-blue-400">Intérêts & Certifications</a>
             <a href="#contact" class="nav-link block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700 hover:text-blue-400">Contact</a>
         </div>
     </header>
@@ -183,7 +163,7 @@
             <h2 class="text-2xl font-medium text-blue-400 mb-6">Gestionnaire de Paie (En formation & Montée en Compétence)</h2>
             <div class="max-w-3xl mx-auto text-lg text-gray-300 mb-8 text-justify">
                 <p class="mb-4">
-                    Actuellement en <span class="font-bold">montée en compétence</span> sur le métier de <span class="font-bold">Gestionnaire de Paie</span> 🚀 via une formation certifiante (Titre RNCP niveau 5 - Bac+2) avec STUDI, débutée le <span class="font-bold">3 juin 2025</span>. Ma certification est prévue entre <span class="font-bold">Avril 2026 et Juillet 2026</span>.
+                    Actuellement en <span class="font-bold">montée en compétence</span> sur le métier de <span class="font-bold">Gestionnaire de Paie</span> 🚀 via une formation certifiante (Titre RNCP niveau 5 - Bac+2) avec STUDI, débutée le <span class="font-bold">3 juin 2025</span>. Ma certification est prévue en <span class="font-bold">juin 2026</span>.
                 </p>
                 <p>
                     Je mobilise plus de 20 ans d'expérience en gestion et relation client pour devenir un expert de la paie et de l'administration du personnel. Je suis à la recherche active d'un stage ou d'un emploi pour concrétiser ce projet professionnel et mettre en pratique mes acquis théoriques. ✨
@@ -196,31 +176,11 @@
 
             <h3 class="text-xl font-bold text-gray-100 mb-4">Qualités Clés</h3>
             <div class="max-w-3xl mx-auto flex flex-wrap justify-center gap-4 text-gray-300">
-                <span class="soft-skill-tag relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors">Discrétion 🤫
-                    <span class="soft-skill-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2">
-                        Respect de la confidentialité des informations sensibles du personnel, essentiel pour la gestion de la paie et des données RH.
-                    </span>
-                </span>
-                <span class="soft-skill-tag relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors">Sens du service 👍
-                    <span class="soft-skill-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2">
-                        Accueillir et orienter efficacement la clientèle chez SARL DSG, garantissant une expérience positive et professionnelle. 😊
-                    </span>
-                </span>
-                <span class="soft-skill-tag relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors">Leadership 🌟
-                    <span class="soft-skill-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2">
-                        Management d'équipe et optimisation des relations fournisseurs chez SARL MIJE & SEZADIS, démontrant une capacité à fédérer. 🚀
-                    </span>
-                </span>
-                <span class="soft-skill-tag relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors">Relation et négociation (clients, fournisseurs, équipe) 🤝
-                    <span class="soft-skill-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2">
-                        Gestion et développement d'un portefeuille clients chez Thiriet, avec succès dans les objectifs commerciaux et la satisfaction client. 📈
-                    </span>
-                </span>
-                <span class="soft-skill-tag relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors">Organisation et respect des échéances 🗓
-                    <span class="soft-skill-tooltip absolute top-full mt-2 left-1/2 -translate-x-1/2">
-                        Gestion des stocks et commandes, respect des délais critiques en environnement dynamique, assurant une efficacité opérationnelle. ✅
-                    </span>
-                </span>
+                <span class="soft-skill-tag modal-trigger relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors" data-detail-id="organisation_rigueur" data-modal-type="quality">Organisation et rigueur ✅</span>
+                <span class="soft-skill-tag modal-trigger relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors" data-detail-id="relation_client" data-modal-type="quality">Relation client maîtrisée 🤝</span>
+                <span class="soft-skill-tag modal-trigger relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors" data-detail-id="aptitudes_manageriales" data-modal-type="quality">Aptitudes managériales 🌟</span>
+                <span class="soft-skill-tag modal-trigger relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors" data-detail-id="esprit_equipe_discretion" data-modal-type="quality">Esprit d'équipe et discrétion 🤫</span>
+                <span class="soft-skill-tag modal-trigger relative bg-gray-700 px-4 py-2 rounded-full shadow-md text-sm cursor-pointer hover:bg-orange-600 transition-colors" data-detail-id="sens_ecoute_proactivite" data-modal-type="quality">Sens de l'écoute et proactivité 👍</span>
             </div>
         </section>
 
@@ -274,7 +234,7 @@
                 <!-- Timeline Items -->
                 <div class="space-y-16">
                     <!-- Formation en cours -->
-                    <div class="timeline-item relative flex items-center cursor-pointer" data-detail-id="formation_gdp">
+                    <div class="timeline-item relative flex items-center cursor-pointer" data-detail-id="formation_gdp" data-modal-type="timeline">
                         <div class="hidden md:block w-1/2 pr-8"></div>
                         <div class="hidden md:block absolute w-4 h-4 rounded-full bg-blue-400 left-1/2 transform -translate-x-1/2 z-10 border-2 border-gray-900"></div>
                         <div class="w-full md:w-1/2 md:pl-8">
@@ -282,19 +242,19 @@
                                 <p class="text-sm text-gray-400">Juin 2025 – Juin 2026</p>
                                 <h3 class="font-bold text-lg text-gray-100 mt-1">Gestionnaire de Paie (Titre RNCP niv. 5) 🎓</h3>
                                 <p class="text-md font-medium text-gray-300">Studi (partenariat ESGRH)</p>
-                                <p class="text-sm text-gray-400 mt-2">Formation en ligne, couvrant l'ensemble des processus de paie. <span class="font-bold">Certification prévue entre Avril 2026 et Juillet 2026.</span></p>
+                                <p class="text-sm text-gray-400 mt-2">Formation en ligne, couvrant l'ensemble des processus de paie. <span class="font-bold">Certification prévue en juin 2026.</span></p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Expérience VRP -->
-                    <div class="timeline-item relative flex items-center flex-row-reverse md:flex-row cursor-pointer" data-detail-id="exp_vrp">
+                    <div class="timeline-item relative flex items-center flex-row-reverse md:flex-row cursor-pointer" data-detail-id="exp_vrp" data-modal-type="timeline">
                         <div class="w-full md:w-1/2 md:pr-8 text-right">
                             <div class="bg-gray-800 p-6 rounded-lg shadow-md border-r-4 md:border-r-0 md:border-l-4 border-orange-400 hover:border-orange-300 transition-colors">
                                 <p class="text-sm text-gray-400">Février 2021 – Mai 2024</p>
-                                <h3 class="font-bold text-lg text-gray-100 mt-1">VRP 💼</h3>
+                                <h3 class="font-bold text-lg text-gray-100 mt-1">Chargé de Développement Commercial 💼</h3>
                                 <p class="text-md font-medium text-gray-300">Thiriet - Nogent sur Seine (CDI)</p>
-                                <p class="text-sm text-gray-400 mt-2">Gestion et développement d'un portefeuille clients.</p>
+                                <p class="text-sm text-gray-400 mt-2">Gestion et développement d'un portefeuille clients, atteinte des objectifs de vente, logistique des tournées et représentation de la marque.</p>
                             </div>
                         </div>
                         <div class="hidden md:block absolute w-4 h-4 rounded-full bg-amber-400 left-1/2 transform -translate-x-1/2 z-10 border-2 border-gray-900"></div>
@@ -302,7 +262,7 @@
                     </div>
                     
                     <!-- Expérience Responsable -->
-                    <div class="timeline-item relative flex items-center cursor-pointer" data-detail-id="exp_responsable">
+                    <div class="timeline-item relative flex items-center cursor-pointer" data-detail-id="exp_responsable" data-modal-type="timeline">
                         <div class="hidden md:block w-1/2 pr-8"></div>
                         <div class="hidden md:block absolute w-4 h-4 rounded-full bg-amber-400 left-1/2 transform -translate-x-1/2 z-10 border-2 border-gray-900"></div>
                         <div class="w-full md:w-1/2 md:pl-8">
@@ -316,13 +276,13 @@
                     </div>
 
                     <!-- Expérience Caissier -->
-                    <div class="timeline-item relative flex items-center flex-row-reverse md:flex-row cursor-pointer" data-detail-id="exp_caissier">
+                    <div class="timeline-item relative flex items-center flex-row-reverse md:flex-row cursor-pointer" data-detail-id="exp_caissier" data-modal-type="timeline">
                          <div class="w-full md:w-1/2 md:pr-8 text-right">
                             <div class="bg-gray-800 p-6 rounded-lg shadow-md border-r-4 md:border-r-0 md:border-l-4 border-orange-400 hover:border-orange-300 transition-colors">
                                 <p class="text-sm text-gray-400">Juillet 2002 – Septembre 2011</p>
-                                <h3 class="font-bold text-lg text-gray-100 mt-1">Caissier et accueil du public 🤝</h3>
+                                <h3 class="font-bold text-lg text-gray-100 mt-1">Agent d'accueil polyvalent 🤝</h3>
                                 <p class="text-md font-medium text-gray-300">SARL DSG</p>
-                                <p class="text-sm text-gray-400 mt-2">Gestion de la réception physique et téléphonique, opérations bancaires, et diverses tâches administratives avec rigueur.</p>
+                                <p class="text-sm text-gray-400 mt-2">Accueil physique, information et orientation des clients. Encaissement, gestion des moyens de paiement, ouverture et clôture de caisse.</p>
                             </div>
                         </div>
                         <div class="hidden md:block absolute w-4 h-4 rounded-full bg-amber-400 left-1/2 transform -translate-x-1/2 z-10 border-2 border-gray-900"></div>
@@ -330,7 +290,7 @@
                     </div>
 
                     <!-- Formation initiale -->
-                    <div class="timeline-item relative flex items-center cursor-pointer" data-detail-id="formation_bac">
+                    <div class="timeline-item relative flex items-center cursor-pointer" data-detail-id="formation_bac" data-modal-type="timeline">
                         <div class="hidden md:block w-1/2 pr-8"></div>
                         <div class="hidden md:block absolute w-4 h-4 rounded-full bg-stone-600 left-1/2 transform -translate-x-1/2 z-10 border-2 border-gray-900"></div>
                         <div class="w-full md:w-1/2 md:pl-8">
@@ -356,15 +316,15 @@
                 <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
                     <h3 class="font-bold text-lg text-blue-400 mb-3">Loisirs et Passions</h3>
                     <ul class="space-y-2 text-sm text-gray-300 list-disc list-inside">
-                        <li><span class="font-bold">Cinéma :</span> Passion pour les œuvres contemporaines et classiques (Dernier film vu : Alien Romulus) 🎬</li>
-                        <li><span class="font-bold">Couture & Création Manuelles :</span> Réalisation de pièces uniques, imagination libre, esprit curieux et touche à tout 🧵</li>
-                        <li><span class="font-bold">Jeux Vidéo :</span> Intérêt pour l'univers narratif et la stratégie 🎮</li>
+                        <li class="cursor-pointer hover:text-blue-300 transition-colors" data-detail-id="cinema" data-modal-type="interest"><span class="font-bold">Cinéma :</span> Passion pour les œuvres contemporaines et classiques 🎬</li>
+                        <li class="cursor-pointer hover:text-blue-300 transition-colors" data-detail-id="creation_manuelle" data-modal-type="interest"><span class="font-bold">Couture & Création Manuelles :</span> Réalisation de pièces uniques 🧵</li>
+                        <li class="cursor-pointer hover:text-blue-300 transition-colors" data-detail-id="jeux_video" data-modal-type="interest"><span class="font-bold">Jeux Vidéo :</span> Intérêt pour l'univers narratif et la stratégie 🎮</li>
                     </ul>
                 </div>
                 <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
                     <h3 class="font-bold text-lg text-blue-400 mb-3">Certifications</h3>
                     <ul class="space-y-2 text-sm text-gray-300 list-disc list-inside">
-                        <li><span class="font-bold">Gestionnaire de Paie :</span> En cours (Certification prévue entre Avril 2026 et Juillet 2026) 🏆</li>
+                        <li class="cursor-pointer hover:text-blue-300 transition-colors" data-detail-id="gestionnaire_paie_cert" data-modal-type="certification"><span class="font-bold">Gestionnaire de paie :</span> En cours de validation 🏆</li>
                     </ul>
                 </div>
             </div>
@@ -461,7 +421,7 @@
 
             // Calculate training progress for Radar Chart
             const startDate = new Date('2025-06-03');
-            const endDate = new Date('2026-04-30'); // Fin avril
+            const endDate = new Date('2026-06-30'); // Fin juin pour la certification
             const currentDate = new Date();
 
             const totalDurationMs = endDate.getTime() - startDate.getTime();
@@ -552,8 +512,9 @@
                 }
             });
 
-            // Timeline Modal Logic
+            // Data for all modals
             const detailData = {
+                // Timeline details
                 formation_gdp: {
                     title: "Gestionnaire de Paie (Titre RNCP niv. 5)",
                     period: "Juin 2025 – Juin 2026",
@@ -565,20 +526,20 @@
                             <li>Gestion administrative du personnel</li>
                             <li>Conseil et assistance auprès des décideurs et des collaborateurs</li>
                         </ul>
-                        <p class="mt-4">Acquisition de 120 crédits ECTS. Certification prévue entre Avril 2026 et Juillet 2026.</p>
+                        <p class="mt-4">Acquisition de 120 crédits ECTS. Certification prévue en juin 2026.</p>
                     `
                 },
                 exp_vrp: {
-                    title: "VRP",
+                    title: "Chargé de Développement Commercial",
                     period: "Février 2021 – Mai 2024",
                     company: "Thiriet - Nogent sur Seine (CDI)",
                     description: `
                         <p>Responsable de la gestion et du développement d'un portefeuille clients. Missions principales :</p>
                         <ul class="list-disc list-inside mt-2 space-y-1">
-                            <li>Prospection et fidélisation de la clientèle</li>
-                            <li>Négociation commerciale et suivi des ventes</li>
-                            <li>Atteinte des objectifs de chiffre d'affaires</li>
-                            <li>Gestion autonome de l'emploi du temps et des tournées</li>
+                            <li><strong>Développement commercial :</strong> Gestion, fidélisation et prospection d'un portefeuille de clients particuliers (tournées ciblées et actions commerciales sur le terrain).</li>
+                            <li><strong>Performance :</strong> Atteinte et dépassement des objectifs de vente (chiffre d'affaires, panier moyen, fréquence d'achat) en mettant en place des actions de relance et promotions ciblées.</li>
+                            <li><strong>Logistique :</strong> Planification et optimisation des tournées de livraison, encaissements et gestion des imprévus.</li>
+                            <li><strong>Représentation :</strong> Représentation de l'image de marque Thiriet sur le terrain.</li>
                         </ul>
                         <p class="mt-4">Développement de compétences en relation client, négociation et autonomie.</p>
                     `
@@ -600,18 +561,14 @@
                     `
                 },
                 exp_caissier: {
-                    title: "Caissier et accueil du public",
+                    title: "Agent d'accueil polyvalent",
                     period: "Juillet 2002 – Septembre 2011",
                     company: "SARL DSG",
                     description: `
                         <p>Responsable de l'accueil et des opérations courantes :</p>
                         <ul class="list-disc list-inside mt-2 space-y-1">
-                            <li>Réception physique et téléphonique de la clientèle</li>
-                            <li>Réalisation des opérations bancaires diverses (dépôts, retraits, virements)</li>
-                            <li>Gestion du courrier entrant et sortant</li>
-                            <li>Rédaction et enregistrement de divers documents administratifs</li>
-                            <li>Gestion des rendez-vous et de l'emploi du temps</li>
-                            <li>Classement et suivi des dossiers</li>
+                            <li>Accueil physique, information et orientation des clients.</li>
+                            <li>Encaissement, gestion des moyens de paiement, ouverture et clôture de caisse.</li>
                         </ul>
                         <p class="mt-4">Développement d'une grande rigueur administrative et d'un sens aigu du service client.</p>
                     `
@@ -628,14 +585,13 @@
                             <li>Organisation administrative et gestion de dossiers</li>
                         </ul>
                     `
-                }
-            };
+                },
 
-            const skillDetailData = {
+                // Skill details
                 gestion_portefeuille_clients: {
                     title: "Gestion de Portefeuille Clients",
                     description: `
-                        <p>Compétence acquise en tant que VRP chez Thiriet, incluant :</p>
+                        <p>Compétence acquise en tant que Chargé de Développement Commercial chez Thiriet, incluant :</p>
                         <ul class="list-disc list-inside mt-2 space-y-1">
                             <li>Développement et fidélisation d'une clientèle existante.</li>
                             <li>Prospection active de nouveaux clients.</li>
@@ -651,7 +607,7 @@
                         <p>Expertise développée en tant que Responsable fruits et légumes chez SARL MIJE & SEZADIS :</p>
                         <ul class="list-disc list-inside mt-2 space-y-1">
                             <li>Optimisation des niveaux de stocks pour minimiser les pertes et les ruptures.</li>
-                            <li>Passation des commandes auprès de multiple
+                            <li>Passation des commandes auprès de multiples fournisseurs.</li>
                             <li>Négociation des conditions d'achat et des délais de livraison.</li>
                             <li>Contrôle qualité à réception des marchandises.</li>
                         </ul>
@@ -672,14 +628,14 @@
                     `
                 },
                 accueil_operations: {
-                    title: "Accueil Physique et Téléphonique & Opérations Bancaires",
+                    title: "Accueil Physique et Téléphonique & Opérations de Caisse",
                     description: `
-                        <p>Compétences clés acquises chez SARL DSG en tant que Caissier et accueil du public :</p>
+                        <p>Compétences clés acquises chez SARL DSG en tant qu'Agent d'accueil polyvalent :</p>
                         <ul class="list-disc list-inside mt-2 space-y-1">
                             <li>Accueil chaleureux et professionnel de la clientèle.</li>
-                            <li>Gestion des appels téléphoniques et des demandes d'information.</li>
-                            <li>Réalisation de toutes les opérations bancaires courantes (dépôts, retraits, virements).</li>
-                            <li>Conseil et orientation des clients vers les services appropriés.</li>
+                            <li>Information et orientation des clients.</li>
+                            <li>Encaissement et gestion des moyens de paiement.</li>
+                            <li>Ouverture et clôture de caisse.</li>
                         </ul>
                         <p class="mt-4 font-bold">Excellence dans la relation client et la gestion des transactions. 🤝</p>
                     `
@@ -738,6 +694,67 @@
                         </ul>
                         <p class="mt-4 font-bold">Objectif : Devenir un partenaire RH stratégique et opérationnel. 📊</p>
                     `
+                },
+
+                // Quality details (now modals)
+                organisation_rigueur: {
+                    title: "Organisation et Rigueur",
+                    description: `
+                        <p>Maîtrise des processus administratifs et respect scrupuleux des échéances pour une efficacité optimale dans la gestion quotidienne. Capacité à structurer le travail et à maintenir la précision dans les tâches.</p>
+                    `
+                },
+                relation_client: {
+                    title: "Relation client maîtrisée",
+                    description: `
+                        <p>Capacité avérée à établir et maintenir des relations de confiance avec les clients et les partenaires, à l'écoute de leurs besoins et à la résolution proactive des problèmes. Excellentes compétences en communication interpersonnelle.</p>
+                    `
+                },
+                aptitudes_manageriales: {
+                    title: "Aptitudes managériales",
+                    description: `
+                        <p>Expérience solide en encadrement d'équipe, planification des tâches, délégation et motivation des collaborateurs pour atteindre les objectifs fixés. Favorise un environnement de travail collaboratif et productif.</p>
+                    `
+                },
+                esprit_equipe_discretion: {
+                    title: "Esprit d'équipe et discrétion",
+                    description: `
+                        <p>Contribution positive à la dynamique de groupe, favorisant la collaboration et le partage des connaissances. Respect absolu de la confidentialité des informations sensibles, essentiel dans les domaines RH et financiers.</p>
+                    `
+                },
+                sens_ecoute_proactivite: {
+                    title: "Sens de l'écoute et proactivité",
+                    description: `
+                        <p>Compréhension rapide des besoins, anticipation des situations et proposition de solutions innovantes. Approche orientée vers l'action et l'amélioration continue.</p>
+                    `
+                },
+
+                // Interest details (now modals)
+                cinema: {
+                    title: "Cinéma",
+                    description: `
+                        <p>🎬 Passion pour les œuvres contemporaines et classiques, explorant divers genres et réalisations. Le cinéma est pour moi un moyen d'évasion et de découverte culturelle. Mon dernier film vu en salle est "Alien Romulus".</p>
+                    `
+                },
+                creation_manuelle: {
+                    title: "Création Manuelle",
+                    description: `
+                        <p>🧵 Réalisation de projets variés, notamment en couture, pour le plaisir de créer et l'amour du détail. Cette activité me permet d'exprimer ma créativité et ma minutie.</p>
+                    `
+                },
+                jeux_video: {
+                    title: "Jeux Vidéo",
+                    description: `
+                        <p>🎮 Intérêt marqué pour les univers narratifs riches et la stratégie. Les jeux vidéo sont pour moi un moyen d'évasion, de réflexion et de développement de compétences analytiques.</p>
+                    `
+                },
+
+                // Certification details (now modals)
+                gestionnaire_paie_cert: {
+                    title: "Certification Gestionnaire de Paie",
+                    description: `
+                        <p>🏆 Certification en cours de validation (Titre RNCP niveau 5 - Bac+2) avec STUDI. La validation est prévue en juin 2026.</p>
+                        <p class="mt-2 text-sm text-gray-700">Cette certification attestera de ma maîtrise de l'ensemble des processus de paie et de l'administration du personnel.</p>
+                    `
                 }
             };
 
@@ -747,34 +764,41 @@
             const modalPeriod = document.getElementById('modalPeriod');
             const modalCompany = document.getElementById('modalCompany');
             const modalDescription = document.getElementById('modalDescription');
+            const modalContent = document.querySelector('.modal-content'); // Get reference to modal content
 
             // Function to open modal with content
-            function openModal(title, period, company, description) {
+            function openModal(title, period, company, description, modalType) {
                 modalTitle.textContent = title;
                 modalPeriod.textContent = period;
                 modalCompany.textContent = company;
                 modalDescription.innerHTML = description;
+
+                // Reset period and company visibility
+                modalPeriod.style.display = period ? 'block' : 'none';
+                modalCompany.style.display = company ? 'block' : 'none';
+
+                // Reset background color class
+                modalContent.classList.remove('bg-blue-50'); 
+                
+                // Apply specific background color for certain modal types
+                if (modalType === 'quality' || modalType === 'interest' || modalType === 'certification') {
+                    modalContent.classList.add('bg-blue-50'); // Light blue for these specific modals
+                } else {
+                    modalContent.style.backgroundColor = ''; // Revert to default CSS (stone-200)
+                }
                 modal.style.display = 'flex';
             }
 
-            // Timeline item click handler
-            document.querySelectorAll('.timeline-item').forEach(item => {
+            // Generic click handler for all modal triggers
+            document.querySelectorAll('.modal-trigger, .timeline-item, [data-skill-detail]').forEach(item => {
                 item.addEventListener('click', function() {
                     const detailId = this.dataset.detailId;
+                    const modalType = this.dataset.modalType; // Get the modal type
+
                     const data = detailData[detailId];
                     if (data) {
-                        openModal(data.title, data.period, data.company, data.description);
-                    }
-                });
-            });
-
-            // Skill item click handler
-            document.querySelectorAll('[data-skill-detail]').forEach(item => {
-                item.addEventListener('click', function() {
-                    const skillDetailId = this.dataset.skillDetail;
-                    const data = skillDetailData[skillDetailId];
-                    if (data) {
-                        openModal(data.title, '', '', data.description); // No period/company for skill details
+                        // Pass modalType to openModal
+                        openModal(data.title, data.period || '', data.company || '', data.description, modalType);
                     }
                 });
             });
